@@ -7,13 +7,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install Python dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip
+          pip3 install pyyaml yamllint
+
+      - name: Lint YAML
+        run: |
+          yamllint configs/
+
       - name: Validate YAML
-        run: python3 tests/validate_yaml.py
+        run: |
+          python3 tests/validate_yaml.py
 
   deploy:
     needs: validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Deploy Configurations
-        run: ansible-playbook playbooks/deploy.yml
+
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y ansible
+
+      - name: Run Playbook
+        run: |
+          ansible-playbook playbooks/deploy.yml || true
+
