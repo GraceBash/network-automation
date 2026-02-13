@@ -1,0 +1,3 @@
+interface: eth2
+priority: medium
+qos: balance
